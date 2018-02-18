@@ -1,0 +1,40 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (5.1.5)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+    coderay (1.1.2)
+    concurrent-ruby (1.0.5)
+    dotenv (2.2.1)
+    ffi (1.9.21)
+    graphql (1.7.12)
+    graphql-client (0.12.2)
+      activesupport (>= 3.0, < 6.0)
+      graphql (~> 1.6)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
+    method_source (0.9.0)
+    minitest (5.11.3)
+    pry (0.11.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    rubyserial (0.5.0)
+      ffi (~> 1.9, >= 1.9.3)
+    thread_safe (0.3.6)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dotenv
+  graphql-client
+  pry
+  rubyserial
+
+BUNDLED WITH
+   1.16.1
