@@ -88,7 +88,7 @@ def prs_for(owner:, repo:, count:)
   }
   result = Client.query(PullRequestsQuery, variables: variables)
   result.data.repository.pull_requests.nodes.map { |pr| clean_up_pr(pr) }
-rescue Net::OpenTimeout => e
+rescue Net::OpenTimeout, Errno::ETIMEDOUT => e
   []
 end
 
