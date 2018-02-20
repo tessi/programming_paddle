@@ -53,16 +53,16 @@ void printValue(int value) {
 }
 
 void pressCmdP() {
-  Keyboard.press(KEY_LEFT_GUI);
+  // Keyboard.press(KEY_LEFT_CTRL);
   Keyboard.press('p');
   delay(100);
   Keyboard.releaseAll();
 }
 
 void pressCmdShiftP() {
-  Keyboard.press(KEY_LEFT_GUI);
+  // Keyboard.press(KEY_LEFT_CTRL);
   Keyboard.press(KEY_LEFT_SHIFT);
-  Keyboard.press('p');
+  Keyboard.press('P');
   delay(100);
   Keyboard.releaseAll();
 }
@@ -104,3 +104,4 @@ void loop() {
 
   pressKeys(sendValue);
 }
+
