@@ -120,34 +120,40 @@ end
 def status_loop
   serialport = Serial.new(PORT)
   loop do
-    repos = repositories
-    puts "repos to fetch: #{repos.count}"
-    pr_lists = repos.map { |r|
-      prs_for(owner: r['owner'], repo: r['name'], count: LED_COUNT / repos.count)
-    }.map { |pr_list| pr_list.each_with_index }
+    begin
+      repos = repositories
+      puts "repos to fetch: #{repos.count}"
+      pr_lists = repos.map { |r|
+        prs_for(owner: r['owner'], repo: r['name'], count: LED_COUNT / repos.count)
+      }.map { |pr_list| pr_list.each_with_index }
 
-    puts "received PRs: #{pr_lists.map(&:count).to_json}"
-    max_displayed_prs = LED_COUNT / pr_lists.count
-    prs = pr_lists.each_with_index.map { |pr_list, list_index|
-      pr_list.to_a
-             .slice(0, max_displayed_prs)
-             .map { |pr, i| pr.merge(led: list_index * max_displayed_prs + i) }
-    }.reduce(&:+)
+      puts "received PRs: #{pr_lists.map(&:count).to_json}"
+      max_displayed_prs = LED_COUNT / pr_lists.count
+      prs = pr_lists.each_with_index.map { |pr_list, list_index|
+        pr_list.to_a
+              .slice(0, max_displayed_prs)
+              .map { |pr, i| pr.merge(led: list_index * max_displayed_prs + i) }
+      }.reduce(&:+)
 
-    puts "updating leds"
-    prs.each do |pr|
-      puts pr.to_json
-      color = STATE_COLORS[pr[:combined_state]]
-      puts "color: #{color}"
-      update_led(serialport, pr[:led], color)
+      puts "updating leds"
+      prs.each do |pr|
+        puts pr.to_json
+        color = STATE_COLORS[pr[:combined_state]]
+        puts "color: #{color}"
+        update_led(serialport, pr[:led], color)
+      end
+
+      puts "resetting unused leds"
+      unused_leds = (0..(LED_COUNT - 1)).to_a - prs.map { |pr| pr[:led] }
+      unused_leds.each { |i| update_led(serialport, i, STATE_COLORS[nil]) }
+
+      puts "sleeping ..."; puts ""
+    rescue RubySerial::Error
+      puts 'could not connect to leds ... retrying in a minute'
+      serialport = Serial.new(PORT)
+    ensure
+      sleep 60
     end
-
-    puts "resetting unused leds"
-    unused_leds = (0..(LED_COUNT - 1)).to_a - prs.map { |pr| pr[:led] }
-    unused_leds.each { |i| update_led(serialport, i, STATE_COLORS[nil]) }
-
-    puts "sleeping ..."; puts ""
-    sleep 60
   end
 ensure
   puts "... closing"
